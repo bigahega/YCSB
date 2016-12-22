@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public abstract class Checkpoint implements Serializable {
 
-    public byte[] checkpointData;
+    byte[] checkpointData;
 
     public byte[] getCheckpointData() {
         return this.checkpointData;

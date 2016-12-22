@@ -62,5 +62,10 @@ LICENSE file.
       <artifactId>slf4j-log4j12</artifactId>
       <version>1.7.10</version>
     </dependency>
+    <dependency>
+      <groupId>com.yahoo.ycsb</groupId>
+      <artifactId>core</artifactId>
+      <version>0.13.0-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 </project>

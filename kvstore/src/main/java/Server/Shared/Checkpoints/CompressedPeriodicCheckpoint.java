@@ -7,8 +7,8 @@ import java.util.Map;
  */
 public class CompressedPeriodicCheckpoint extends PeriodicCheckpoint {
 
-    public CompressedPeriodicCheckpoint(Map<String, Map<String, String>> checkpointData) {
-        this.checkpointData = CheckpointUtils.mapToCompressedByteArray(checkpointData);
+    public CompressedPeriodicCheckpoint(Map<String, String> checkpointData) {
+        this.checkpointData = CheckpointUtils.mapToLZMA2ByteArray(checkpointData);
     }
 
 }

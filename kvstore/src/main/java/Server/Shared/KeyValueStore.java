@@ -1,37 +1,37 @@
 package Server.Shared;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Berkin GÜLER (bguler15@ku.edu.tr) on 10.03.2016.
  */
 public class KeyValueStore implements Serializable {
 
-    private Map<String, Map<String, String>> keysValues;
+    private ConcurrentHashMap<String, String> keysValues;
 
     public KeyValueStore()
     {
-        this.keysValues = new HashMap<>();
+        this.keysValues = new ConcurrentHashMap<>();
     }
 
-    public void put(String key, Map<String, String> Value)
+    public void put(String key, String Value)
     {
         this.keysValues.put(key, Value);
     }
 
-    public Map<String, String> get(String key)
+    public String get(String key)
     {
         return this.keysValues.get(key);
     }
 
-    public Map<String, Map<String, String>> getKeysValues() {
+    public Map<String, String> getKeysValues() {
         return this.keysValues;
     }
 
-    public void restoreCheckpoint(Map<String, Map<String, String>> checkpoint) {
-        this.keysValues = checkpoint;
+    public void restoreCheckpoint(Map<String, String> checkpoint) {
+        this.keysValues = (ConcurrentHashMap<String, String>) checkpoint;
     }
 
 }

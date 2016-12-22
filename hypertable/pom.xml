@@ -50,6 +50,11 @@ LICENSE file.
       <artifactId>hypertable</artifactId>
       <version>${hypertable.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.yahoo.ycsb</groupId>
+      <artifactId>core</artifactId>
+      <version>0.13.0-SNAPSHOT</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

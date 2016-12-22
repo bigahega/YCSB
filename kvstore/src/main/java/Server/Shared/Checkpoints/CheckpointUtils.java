@@ -1,7 +1,9 @@
 package Server.Shared.Checkpoints;
 
+import org.tukaani.xz.LZMA2Options;
+import org.tukaani.xz.XZOutputStream;
+
 import java.io.*;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -11,7 +13,24 @@ import java.util.zip.GZIPOutputStream;
  */
 public class CheckpointUtils {
 
-    public static byte[] mapToCompressedByteArray(Map<String, Map<String, String>> map) {
+    public static byte[] mapToLZMA2ByteArray(Map<String, String> map) {
+        byte[] result = null;
+        byte[] data = mapToByteArray(map);
+
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            XZOutputStream xzOutputStream = new XZOutputStream(baos, new LZMA2Options(LZMA2Options.PRESET_MAX));
+            xzOutputStream.write(data);
+            xzOutputStream.close();
+            result = baos.toByteArray();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public static byte[] mapToGZIPByteArray(Map<String, String> map) {
         byte[] result = null;
 
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -27,7 +46,7 @@ public class CheckpointUtils {
         return result;
     }
 
-    public static byte[] compressByteArray(byte[] bytes) {
+    public static byte[] GZIPcompressByteArray(byte[] bytes) {
         byte[] result = null;
 
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -42,8 +61,8 @@ public class CheckpointUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static Map<String, Map<String, String>> compressedByteArrayToMap(byte[] compressedByteArray) {
-        Map<String, Map<String, String>> result = null;
+    public static Map<String, String> GZIPcompressedByteArrayToMap(byte[] compressedByteArray) {
+        Map<String, String> result = null;
 
         try (ByteArrayInputStream bais = new ByteArrayInputStream(compressedByteArray);
              GZIPInputStream gis = new GZIPInputStream(bais);
@@ -51,7 +70,7 @@ public class CheckpointUtils {
 
             Object incomingObj = ois.readObject();
             if (incomingObj instanceof Map)
-                result = (Map<String, Map<String, String>>) incomingObj;
+                result = (Map<String, String>) incomingObj;
             else
                 throw new Exception("Incoming object is not a Map<String,String>");
 
@@ -63,16 +82,14 @@ public class CheckpointUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static Map<String, Map<String, String>> byteArrayToMap(byte[] byteArray) {
-        if (byteArray == null || byteArray.length == 0)
-            return new HashMap<>();
-        Map<String, Map<String, String>> result = null;
+    public static Map<String, String> byteArrayToMap(byte[] byteArray) {
+        Map<String, String> result = null;
 
         try (ByteArrayInputStream bais = new ByteArrayInputStream(byteArray);
             ObjectInputStream ois = new ObjectInputStream(bais);) {
             Object incomingObj = ois.readObject();
             if(incomingObj instanceof Map)
-                result = (Map<String, Map<String, String>>) incomingObj;
+                result = (Map<String, String>) incomingObj;
             else
                 throw new Exception("Incoming object is not a Map<String, String>");
         } catch (Exception ex) {
@@ -82,7 +99,7 @@ public class CheckpointUtils {
         return result;
     }
 
-    public static byte[] mapToByteArray(Map<String, Map<String, String>> map) {
+    public static byte[] mapToByteArray(Map<String, String> map) {
         byte[] result = null;
 
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();

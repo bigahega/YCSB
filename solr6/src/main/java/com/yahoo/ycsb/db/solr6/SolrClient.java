@@ -37,6 +37,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 
+import static java.lang.System.getProperties;
+
 /**
  * Solr client for YCSB framework.
  *
